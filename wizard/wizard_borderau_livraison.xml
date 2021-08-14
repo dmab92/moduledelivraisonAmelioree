@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_bordereau_livraison" model="ir.ui.view">
+        <field name="name">wizard bordereau de livraison</field>
+        <field name="model">wizard.stock.bordereau.livraison</field>
+        <field name="arch" type="xml">
+            <form string="Rapport de livraison">
+                <group>
+                    <field name="date_start" readonly="0"/>
+                    <field name="date_end" readonly="0"/>
+<!--                    <field name="company_id" />-->
+                    <field name="company_ids"  readonly="0"  widget="many2many_tags"  
+                        options="{'no_create_edit': True}" />
+                </group>
+
+                <footer>
+                    <button name="print_bordereau"
+                        string="Imprimer le rapport de livraison"
+                        type="object"
+                        class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_bordereau_livraison" model="ir.actions.act_window">
+        <field name="name">Rapport  de livraison</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">wizard.stock.bordereau.livraison</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_stock_bordereau_livraison"/>
+        <field name="target">new</field>
+    </record>
+
+<!--    <menuitem-->
+<!--            id="menu_stock_bordereau_livraison"-->
+<!--            action="action_stock_bordereau_livraison"-->
+<!--            name="Bordereau"-->
+<!--            parent="menu_stock_warehouse_mgmt"-->
+<!--            sequence="101"/>-->
+
+</odoo>

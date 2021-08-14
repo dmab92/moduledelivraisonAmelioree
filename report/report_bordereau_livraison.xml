@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_picking_bordereau">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                <h4 class="mt16">
+                    <center>   
+                            RAPPORT DE LIVRAISON POUR LA PERIODE DU
+                            <span t-esc="datas['date_start']" t-options="{&quot;widget&quot;: &quot;date&quot;}"/> 
+                            AU  
+                            <span t-esc="datas['date_end']" t-options="{&quot;widget&quot;: &quot;date&quot;}"/>
+                            
+                    </center> 
+                </h4>
+
+                <br/>
+            
+                <table class="table table-sm o_main_table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th><strong>Numero </strong></th>
+                            <th><strong>Nom du client</strong></th>
+                            <th><strong>Telephone</strong></th>
+                            <th><strong>Produit</strong></th>
+                            <th><strong>Quantite</strong></th>
+                            <th><strong>P.U(FCFA)</strong></th>
+                            <th><strong>Prix Total(FCFA)</strong></th>
+                            <th><strong>Date de livraison</strong></th>
+                            <th><strong>Signature</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="total" t-value="0"/>
+                             <tr t-foreach="docs" t-as="line" class="border-black">
+                                    <td class="text-right"><span t-field="line.origin"/></td>
+                                    <td class="text-left"><span t-field="line.partner_id.name"/></td>
+                                    <td class="text-right"><span t-field="line.partner_id.phone"/></td>
+                                    <td class="text-center"><span t-field="line.move_ids_without_package[0].name"/>
+                                    </td>
+                                    <td class="text-right">
+                                     <span t-esc="'{:,.0f}'.format(line.move_ids_without_package[0].product_uom_qty).replace(',', ' ')"/>
+                                     </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:,.0f}'.format(line.move_ids_without_package[0].product_id.lst_price).replace(',', ' ')"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:,.0f}'.format(line.move_ids_without_package[0].product_id.lst_price* line.move_ids_without_package[0].product_uom_qty).replace(',', ' ')"/>
+
+                                </td>
+                                <td class="text-right"><span t-field="line.date_done"/></td>
+                                <td class="text-right">
+                                <img t-att-src="'data:image/png;base64,%s' % to_text(line.digital_signature)" style="max-height: 4cm; max-width: 8cm;"/>
+                                </td>
+                                <t t-set="total" t-value="total+line.move_ids_without_package[0].product_id.lst_price* line.move_ids_without_package[0].product_uom_qty"/>
+                                </tr>
+                                
+                                <tr class="border-black o_subtotal">
+                                  <td name="td_amount_untaxed_label" with="80%" colspan="6"> 
+                                  <b>TOTAL</b></td>
+                                  <td name="td_amount_untaxed" class="text-right">
+                                      <h4><span t-esc="'{:,.0f}'.format(total).replace(',', ' ')"/></h4>
+                                  </td>
+                                  <td name="td_amount_untaxed_label">
+                                  </td>
+                                  <td name="td_amount_untaxed_label">
+                                  </td>
+                                  
+                                </tr>
+                        
+                    </tbody>
+                </table>
+
+                <div style="page-break-before:always"/>
+
+                <h4 class="mt16">
+                    <center>   
+                            Repartition par quantités d'articles
+                    </center> 
+                    
+                </h4>
+                <br/>
+
+                <div class="row" style="width: 100%;">
+                    <div style="width: 30%;">
+                       
+                    </div>
+                    <div style="width: 20%;">
+                        <table class="table table-condensed">
+                          <thead class="thead-light">
+                            <tr>
+                                <th><strong>Articles</strong></th>
+                                
+                            </tr>
+                        </thead>
+                            <tr t-foreach="article_ids" t-as="line" class="border-black">
+                                <td class="text-left">
+                                    <b><span t-esc="line"/></b> 
+                                    </td>
+                            </tr>
+                        </table>
+
+                      </div>
+                      <div style="width: 20%;">
+                        <table class="table table-condensed">
+                          <thead class="thead-light">
+                            <tr>
+                                <th><strong>Quantités</strong></th>
+                                
+                            </tr>
+                        </thead>
+                                <tr t-foreach="quantity_ids" t-as="line" class="border-black">
+                                    <td class="text-left">
+                                        <b><span t-esc="'{:,.0f}'.format(line).replace(',', ' ')"/></b> </td>
+                                </tr>
+                        </table>
+                      </div>
+                      
+                      <div style="width: 30%;">
+                       
+                      </div>
+                </div>
+                    
+            </div>
+        </t>
+    </t>
+    
+</template>
+
+
+<menuitem
+        id="stock.menu_stock_bordereau_livraison"
+        action="action_stock_bordereau_livraison"
+        name="Rapport de livraison"
+        parent="menu_warehouse_report"
+            />
+</odoo>
+
+
